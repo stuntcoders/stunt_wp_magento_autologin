@@ -28,6 +28,11 @@ class Stuntcoders_WP_Magento_Autologin
     }
 
     function login_if_magento_admin() {
+        // User already logged in
+        if (is_user_logged_in ()) {
+            return;
+        }
+
         self::init_magento_admin_session();
 
         if (self::is_magento_admin_logged_in()) {
@@ -51,13 +56,11 @@ class Stuntcoders_WP_Magento_Autologin
             }
 
             // Login user
-            if (! is_user_logged_in ()) {
-                wp_set_current_user ( $user->ID );
-                wp_set_auth_cookie ( $user->ID, true );
-                do_action ( 'wp_login', $user->user_login );
-                wp_redirect ( get_admin_url() );
-                die;
-            }
+            wp_set_current_user ( $user->ID );
+            wp_set_auth_cookie ( $user->ID, true );
+            do_action ( 'wp_login', $user->user_login );
+            wp_redirect ( get_admin_url() );
+            die;
         }
     }
 
